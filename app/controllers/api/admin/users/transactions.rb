@@ -5,7 +5,6 @@ class ::Api::Admin::Users::Transactions < ::Api::Admin
     resource :transactions do
       helpers do
         def resource_user
-          puts params.inspect
           @resource_user ||= User.find(params[:user_id])
         end
       end
@@ -19,12 +18,11 @@ class ::Api::Admin::Users::Transactions < ::Api::Admin
       oauth2
       get root: 'data' do
         attrs = declared(params, include_missing: false).to_h
-        puts attrs.inspect
-        collection = resource_user.transactions.by_period(attrs['from'], attrs['to'])
+        collection = resource_user.transactions.filtered(attrs)
         render collection, each_serializer: ::TransactionSerializer,
                            meta: {
-                             start_balance: collection.first.before_balance,
-                             end_balance: collection.last.after_balance
+                             start_balance: collection&.first&.before_balance&.to_f || 0.0,
+                             end_balance: collection&.last&.after_balance&.to_f || 0.0
                            },
                            meta_key: :summary
       end

@@ -21,7 +21,7 @@ class User < ApplicationRecord
       t.before_balance = balance
       t.after_balance = t.income? ? balance + t.amount : balance - t.amount
       t.save!
-      update_attribute!(:balance, t.after_balance)
+      update!(balance: t.after_balance)
       t
     end
   end

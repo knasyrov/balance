@@ -5,5 +5,6 @@ FactoryBot.define do
     user
     direction { 'income' }
     amount { 100.0 }
+    sequence(:name) { |n| "transaction_#{n}" }
   end
 end

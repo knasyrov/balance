@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'doorkeeper/grape/helpers'
 
 class ::Api::Admin < Grape::API
   version 'admin'
@@ -11,13 +10,14 @@ class ::Api::Admin < Grape::API
 
   rescue_from :all do |e|
     klass = e.class.to_s
-    if klass.eql?('ActiveRecord::RecordInvalid')
+    case klass
+    when 'ActiveRecord::RecordInvalid'
       error!({ message: e.record.errors.full_messages.join(', ') }, 400)
-    elsif klass.match('OAuthUnauthorizedError')
+    when 'OAuthUnauthorizedError'
       error!({}, 401)
-    elsif klass.match('OAuthForbiddenError')
+    when 'OAuthForbiddenError'
       error!({}, 403)
-    elsif klass.match('ValidationErrors')
+    when 'ValidationErrors'
       error!({ message: e.message }, 400)
     end
   end
@@ -28,9 +28,7 @@ class ::Api::Admin < Grape::API
     end
 
     def admins_only
-      unless current_user.admin?
-        error!({ message: '401 Unauthorized' }, 401)
-      end
+      error!({ message: '401 Unauthorized' }, 401) unless current_user.admin?
     end
   end
 
@@ -41,4 +39,3 @@ class ::Api::Admin < Grape::API
   mount ::Api::Admin::Users
   mount ::Api::Admin::Users::Transactions
 end
-

@@ -10,11 +10,10 @@ class ::Api::V1::Auth < ::Api::Admin
     post 'login' do
       attrs = declared(params).to_h.symbolize_keys
       user = User.find_by(email: attrs[:email])
-      if user && user.valid_password?(attrs[:password])
-        authorize!(user)
-      else
-        raise 'Password is incorrect or user not found'
-      end
+
+      raise 'Password is incorrect or user not found' unless user&.valid_password?(attrs[:password])
+
+      authorize!(user)
     end
 
     desc 'Registration'

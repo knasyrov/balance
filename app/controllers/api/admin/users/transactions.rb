@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-
-class Api::Admin::Users::Transactions < ::Api::Admin
+class ::Api::Admin::Users::Transactions < ::Api::Admin
   namespace 'users/:user_id' do
     resource :transactions do
       helpers do
@@ -24,12 +23,11 @@ class Api::Admin::Users::Transactions < ::Api::Admin
         collection = resource_user.transactions.by_period(attrs['from'], attrs['to'])
         render collection, each_serializer: ::TransactionSerializer,
                            meta: {
-                            start_balance: collection.first.before_balance,
-                            end_balance: collection.last.after_balance
+                             start_balance: collection.first.before_balance,
+                             end_balance: collection.last.after_balance
                            },
                            meta_key: :summary
       end
-
 
       params do
         requires :user_id, type: Integer

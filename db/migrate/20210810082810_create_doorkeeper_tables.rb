@@ -75,11 +75,11 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[6.1]
 
     add_index :oauth_access_tokens, :token, unique: true
     add_index :oauth_access_tokens, :refresh_token, unique: true
-    #add_foreign_key(
+    # add_foreign_key(
     #  :oauth_access_tokens,
     #  :oauth_applications,
     #  column: :application_id
-    #)
+    # )
 
     # Uncomment below to ensure a valid reference to the resource owner's table
     # add_foreign_key :oauth_access_grants, :users, column: :resource_owner_id

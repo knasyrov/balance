@@ -20,5 +20,4 @@ class Transaction < ApplicationRecord
 
     errors.add(:base, 'Insufficient funds on the balance sheet') if user.balance < amount
   end
-
 end
